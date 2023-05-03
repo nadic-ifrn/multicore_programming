@@ -1,32 +1,22 @@
-# Prerequisites
-*.d
+# Ignore folder contents
+/Architecture/*
+/Introduction/*
+/OpenMP/*
 
-# Compiled Object files
-*.slo
-*.lo
+# Ignore Empty Folders
+/Architecture/
+/Introduction/
+/OpenMP/
+
+# Ignore C/C++ compilations files
 *.o
+*.out
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+*.exe
+*.dll
 *.so
 *.dylib
-*.dll
+*.bak
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Ignore bin folders
+**/bin/
