@@ -20,7 +20,7 @@ A terceira parte do curso apresenta, de maneira prática, o conjunto de diretiva
 
 Slides: [Programação com OpenMP](notes/treinamento_3.pdf)
 
-Códigos: [Códigos OpenMP](src/OpenMP)
+Códigos: [Códigos OpenMP](src/)
 
 # Programação em CUDA :fire:
 
