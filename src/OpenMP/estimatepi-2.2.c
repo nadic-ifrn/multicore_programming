@@ -1,3 +1,6 @@
+//clang estimatepi-2.2.c -fopenmp  -o bin/estimatepi-2.2
+//./bin/estimatepi-2.2 100000000
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +11,9 @@ int main(int argc, char **argv)
 {
     unsigned long i, h = 0, n = strtol(argv[1], NULL, 10);
     double x, y;
+
+    double start, end;
+    start = omp_get_wtime();
 #pragma omp parallel
     {
         unsigned int seed = clock() * omp_get_thread_num();
@@ -21,5 +27,7 @@ int main(int argc, char **argv)
                 h++;
         }
     }
+    end = omp_get_wtime();
+    printf("Tempo decorrido = %.16g segundos\n", end - start);
     printf("Pi: %1.15f\n", 4.0 * h / n);
 }

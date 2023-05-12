@@ -1,3 +1,6 @@
+//clang estimatepi-2.0.c -fopenmp  -o bin/estimatepi-2.0
+//./bin/estimatepi-2.0 100000000
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +12,10 @@ int main(int argc, char **argv)
     unsigned long i, h = 0, n = strtol(argv[1], NULL, 10);
     double x, y;
     srand(clock());
+
+    double start, end;
+    start = omp_get_wtime();
+
 #pragma omp parallel for
     for (i = 0; i < n; i++)
     {
@@ -17,5 +24,8 @@ int main(int argc, char **argv)
         if (sqrt(x * x + y * y) <= 1.0)
             h++;
     }
+    end = omp_get_wtime();
+    printf("Tempo decorrido = %.16g segundos\n", end - start);
+
     printf("Pi: %1.15f\n", 4.0 * h / n);
 }

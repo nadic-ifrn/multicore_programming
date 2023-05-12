@@ -1,4 +1,5 @@
-//clang++ -fopenmp -I/usr/local/include/opencv4 -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -I/usr/local/include -I/usr/local/include/nifti  -ldcmimgle -ldcmdata -loflog -lofstd -lopencv_viz -lniftiio dicom_2d_volume-1.0.cpp -o dicom_2d_volume-1.0
+//clang++ -fopenmp -I/usr/local/include/opencv4 -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -I/usr/local/include -I/usr/local/include/nifti  -ldcmimgle -ldcmdata -loflog -lofstd -lopencv_viz -lniftiio dicom_2d_volume-1.0.cpp -o bin/dicom_2d_volume-1.0
+//./bin/dicom_2d_volume-1.0 input/dicom_slices_pat01 201 output/dicom_pat01.png
 #include <dcmtk/dcmimgle/dcmimage.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/viz.hpp>
@@ -14,8 +15,6 @@
 using namespace cv;
 using namespace std;
 using namespace std::chrono;
-
-int NUM_THREADS = 4;
 
 bool save_volume_as_nifti(const Mat& volume, const string& output_file_path) {
     // Create a new NIfTI image
@@ -153,52 +152,37 @@ Mat create_dicom_volume_test2(const vector<string>& dicom_file_paths) {
 }
 
 Mat create_dicom_volume(const vector<string>& dicom_file_paths) {
-    bool error_occurred = false;
     // Load first DICOM image to get image size
     Mat first_slice = convert_dicom_slice_to_cv_mat(dicom_file_paths[0]);
     const int rows = first_slice.rows;
     const int cols = first_slice.cols;
     const int num_slices = dicom_file_paths.size();
 
-    // Create 2D volume
+    // Create a 2D volume with slices placed side by side
     Mat volume(rows, cols * num_slices, CV_16UC1, Scalar(0));
 
-    auto start = high_resolution_clock::now();
-    #pragma omp parallel for num_threads(NUM_THREADS)
     for (size_t i = 0; i < num_slices; ++i) {
-        if (error_occurred) continue;
-
         Mat slice = convert_dicom_slice_to_cv_mat(dicom_file_paths[i]);
 
         if (slice.empty() || slice.rows != rows || slice.cols != cols) {
             cerr << "Error: invalid DICOM slice" << endl;
-            error_occurred = true;
-            continue;
+            return Mat();
         }
 
         // Normalize slice to 0-1 range
         normalize(slice, slice, 0, 1, NORM_MINMAX);
 
-        // Convert slice to CV_16UC1
+        // Convert the slice to CV_16UC1 format with a scale factor
         Mat channel;
         slice.convertTo(channel, CV_16UC1, 65535);
 
-        // Copy the slice to the corresponding position in the volume
+        // Place the channel in the corresponding position in the volume
         channel.copyTo(volume(Rect(i * cols, 0, cols, rows)));
     }
-    auto stop = high_resolution_clock::now();
-
-    auto duration = duration_cast<milliseconds>(stop - start);
-    cout << "function Elapsed time: " << duration.count() << " ms" << endl;
 
     cout << volume.size() << endl;
     cout << volume.channels() << endl;
 
-
-    if (error_occurred) {
-        return Mat();
-    }
-    
     return volume;
 }
 
@@ -230,15 +214,12 @@ Mat create_dicom_volume_test(const vector<string>& dicom_file_paths) {
 
 int main(int argc, char** argv) {
     
-    if (argc != 5) {
-        cerr << "Usage: " << argv[0] << " <path to DICOM folder> <number of slices> <output file path> <number of threads>" << endl;
+    if (argc != 4) {
+        cerr << "Usage: " << argv[0] << " <path to DICOM folder> <number of slices> <output file path>" << endl;
         return EXIT_FAILURE;
     }
 
-    NUM_THREADS = atoi(argv[4]);
-    cout << "number of threads is " << NUM_THREADS << endl;
 
-    
     // List DICOM files in folder
     vector<string> dicom_file_paths = list_dicom_files(argv[1],atoi(argv[2]));
 
@@ -246,16 +227,18 @@ int main(int argc, char** argv) {
         cerr << "Error: no DICOM files found in folder " << argv[1] << endl;
         return EXIT_FAILURE;
     }
-
+    
+    double start, end;
+    start = omp_get_wtime();
     // Create 4D volume from DICOM files
     Mat volume = create_dicom_volume(dicom_file_paths);
+    end = omp_get_wtime();
+    printf("Tempo decorrido = %.16g segundos\n", end - start);
 
     if (volume.empty()) {
         cerr << "Error: cannot create DICOM volume" << endl;
         return EXIT_FAILURE;
     }
-
-
 
     // Save 4D volume to disk as DICOM file
     string output_file_path = argv[3];

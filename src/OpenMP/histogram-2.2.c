@@ -1,3 +1,6 @@
+//gcc -g -Wall -fopenmp -o bin/histogram-2.2 histogram-2.2.c
+//./bin/histogram-2.2 30 0.0 10 100000000
+
 /* File:      histogram.c
  * Purpose:   Build a histogram from some random data
  * 
@@ -228,12 +231,17 @@ int main(int argc, char* argv[]) {
    /* Create bins for storing counts */
    Gen_bins(min_meas, max_meas, bin_maxes, bin_counts, bin_count);
 
+   double start, end;
+   start = omp_get_wtime();
+
 #pragma omp parallel for reduction(+:bin_counts[:bin_count])
    /* Count number of values in each bin */
    for (i = 0; i < data_count; i++) {
       bin = Which_bin(data[i], bin_maxes, bin_count, min_meas);
       bin_counts[bin]++;
    }
+   end = omp_get_wtime();
+   printf("Tempo decorrido = %.16g segundos\n", end - start);
 
 #  ifdef DEBUG
    printf("bin_counts = ");

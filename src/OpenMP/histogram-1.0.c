@@ -1,3 +1,6 @@
+//gcc -g -Wall -o bin/histogram-1.0 histogram-1.0.c
+//./bin/histogram-1.0 30 0.0 10 100000000
+
 /* File:      histogram.c
  * Purpose:   Build a histogram from some random data
  * 
@@ -22,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
 
 /*---------------------------------------------------------------------
  * Function:  Usage 
@@ -227,11 +231,15 @@ int main(int argc, char* argv[]) {
    /* Create bins for storing counts */
    Gen_bins(min_meas, max_meas, bin_maxes, bin_counts, bin_count);
 
+   double start, end;
+   start = omp_get_wtime();
    /* Count number of values in each bin */
    for (i = 0; i < data_count; i++) {
       bin = Which_bin(data[i], bin_maxes, bin_count, min_meas);
       bin_counts[bin]++;
    }
+   end = omp_get_wtime();
+   printf("Tempo decorrido = %.16g segundos\n", end - start);
 
 #  ifdef DEBUG
    printf("bin_counts = ");
@@ -241,7 +249,7 @@ int main(int argc, char* argv[]) {
 #  endif
 
    /* Print the histogram */
-//   Print_histo(bin_maxes, bin_counts, bin_count, min_meas);
+   //Print_histo(bin_maxes, bin_counts, bin_count, min_meas);
 
    free(data);
    free(bin_maxes);

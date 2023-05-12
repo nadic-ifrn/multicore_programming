@@ -1,4 +1,6 @@
-//clang++ -fopenmp -I/usr/local/include/opencv4 -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -I/usr/local/include -I/usr/local/include/nifti  -ldcmimgle -ldcmdata -loflog -lofstd -lopencv_viz -lniftiio dicom_2d_volume-1.0.cpp -o dicom_2d_volume-1.0
+//clang++ -fopenmp -I/usr/local/include/opencv4 -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_videoio -lopencv_imgcodecs -I/usr/local/include -I/usr/local/include/nifti  -ldcmimgle -ldcmdata -loflog -lofstd -lopencv_viz -lniftiio dicom_2d_volume-2.0.cpp -o bin/dicom_2d_volume-2.0
+//./bin/dicom_2d_volume-2.0 input/dicom_slices_pat01 201 output/dicom_pat01.png 8
+
 #include <dcmtk/dcmimgle/dcmimage.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/viz.hpp>
@@ -163,8 +165,7 @@ Mat create_dicom_volume(const vector<string>& dicom_file_paths) {
     // Create 2D volume
     Mat volume(rows, cols * num_slices, CV_16UC1, Scalar(0));
 
-    auto start = high_resolution_clock::now();
-    #pragma omp parallel for num_threads(NUM_THREADS) schedule(dynamic)
+    #pragma omp parallel for num_threads(NUM_THREADS)
     for (size_t i = 0; i < num_slices; ++i) {
         if (error_occurred) continue;
 
@@ -172,11 +173,7 @@ Mat create_dicom_volume(const vector<string>& dicom_file_paths) {
 
         if (slice.empty() || slice.rows != rows || slice.cols != cols) {
             cerr << "Error: invalid DICOM slice" << endl;
-            #pragma omp critical
-            {
-                cerr << "Error: invalid DICOM slice" << endl;
-                error_occurred = true;
-            }
+            error_occurred = true;
             continue;
         }
 
@@ -190,10 +187,6 @@ Mat create_dicom_volume(const vector<string>& dicom_file_paths) {
         // Copy the slice to the corresponding position in the volume
         channel.copyTo(volume(Rect(i * cols, 0, cols, rows)));
     }
-    auto stop = high_resolution_clock::now();
-
-    auto duration = duration_cast<milliseconds>(stop - start);
-    cout << "function Elapsed time: " << duration.count() << " ms" << endl;
 
     cout << volume.size() << endl;
     cout << volume.channels() << endl;
@@ -251,8 +244,12 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+    double start, end;
+    start = omp_get_wtime();
     // Create 4D volume from DICOM files
     Mat volume = create_dicom_volume(dicom_file_paths);
+    end = omp_get_wtime();
+    printf("Tempo decorrido = %.16g segundos\n", end - start);
 
     if (volume.empty()) {
         cerr << "Error: cannot create DICOM volume" << endl;
