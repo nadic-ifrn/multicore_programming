@@ -5,6 +5,7 @@ Aqui estão alguns dos programas que utilizamos para ilustrar o uso do OpenMP:
 - `hello.cpp` - Velho e bom Hello world.
 - `sections.cpp` - Exemplificando o uso de seções.
 - `scope.cpp` - Exemplificando o escopo de variáveis.
+- `schedules` - exemplificando o uso de schedules.
 - `estimatepi` - Método para estimar o número PI.
 - `histogram` - Algoritmo simples para calcular um histograma.
 - `cgm` - Implementação do Método do Gradiente Conjugado.
