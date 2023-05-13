@@ -5,7 +5,7 @@
 #include<omp.h>
 int main()
 {
-    cv::Mat image = cv::imread("input/lena.png");
+    cv::Mat image = cv::imread("input/dogy_caty.png");
     cv::Mat gray_image(image.size(), CV_8UC1);
     
     double start, end;

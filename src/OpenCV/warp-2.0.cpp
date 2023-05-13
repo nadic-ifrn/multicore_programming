@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
     double start, end;
     start = omp_get_wtime();
     // Compute the transformation for each pixel in the output image
-    #pragma omp parallel for shared(inputImage, outputImage, center)
+    #pragma omp parallel for shared(inputImage, outputImage) firstprivate(center)
     for (int y = 0; y < outputImage.rows; y++) {
         for (int x = 0; x < outputImage.cols; x++) {
             // Compute the distance and angle from the center point for this pixel

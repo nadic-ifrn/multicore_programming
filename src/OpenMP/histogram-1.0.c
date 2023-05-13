@@ -249,7 +249,7 @@ int main(int argc, char* argv[]) {
 #  endif
 
    /* Print the histogram */
-   //Print_histo(bin_maxes, bin_counts, bin_count, min_meas);
+   Print_histo(bin_maxes, bin_counts, bin_count, min_meas);
 
    free(data);
    free(bin_maxes);

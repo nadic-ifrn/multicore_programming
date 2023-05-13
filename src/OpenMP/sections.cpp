@@ -10,11 +10,11 @@ void heavy_computation() {
 }
 
 int main() {
-    omp_set_num_threads(6);
+    omp_set_num_threads(10);
     #pragma omp parallel 
     {
         // Exemplo do uso de omp sections
-        #pragma omp sections
+        #pragma omp sections nowait
         {
             #pragma omp section
             {

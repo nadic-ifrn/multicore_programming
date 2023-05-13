@@ -2,7 +2,7 @@
 #include <omp.h>
 #include <stdio.h>
 
-#define N 10000000
+#define N 100000000
 #define d 1.0
 
 int main() {
@@ -12,10 +12,9 @@ int main() {
     double start = omp_get_wtime();
 
     // Com schedule(static, chunk)
-    #pragma omp parallel for schedule(static, 100)
+    #pragma omp parallel for schedule(static, 100) reduction(+:pi)
     for(i = 0; i < N; i++) {
         double x = (i % 2 == 0 ? 1 : -1) * 4.0 / (2.0 * i + 1);
-        #pragma omp atomic
         pi += x;
     }
 
@@ -28,10 +27,9 @@ int main() {
     start = omp_get_wtime();
 
     // Com schedule(dynamic, chunk)
-    #pragma omp parallel for schedule(dynamic, 100)
+    #pragma omp parallel for schedule(dynamic, 100) reduction(+:pi)
     for(i = 0; i < N; i++) {
         double x = (i % 2 == 0 ? 1 : -1) * 4.0 / (2.0 * i + 1);
-        #pragma omp atomic
         pi += x;
     }
 
@@ -44,10 +42,9 @@ int main() {
     start = omp_get_wtime();
 
     // Com schedule(guided, chunk)
-    #pragma omp parallel for schedule(guided, 100)
+    #pragma omp parallel for schedule(guided, 100) reduction(+:pi)
     for(i = 0; i < N; i++) {
         double x = (i % 2 == 0 ? 1 : -1) * 4.0 / (2.0 * i + 1);
-        #pragma omp atomic
         pi += x;
     }
 

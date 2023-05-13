@@ -23,7 +23,7 @@ int main(int argc, char **argv)
             x = ((double)rand_r(&seed)) / RAND_MAX;
             y = ((double)rand_r(&seed)) / RAND_MAX;
 #pragma omp critical
-            if (sqrt(x * x + y * y) <= 1.0)
+            if ((x * x + y * y) <= 1.0)
                 h++;
         }
     }

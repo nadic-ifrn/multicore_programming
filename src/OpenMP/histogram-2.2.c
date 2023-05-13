@@ -234,7 +234,7 @@ int main(int argc, char* argv[]) {
    double start, end;
    start = omp_get_wtime();
 
-#pragma omp parallel for reduction(+:bin_counts[:bin_count])
+#pragma omp parallel for reduction(+:bin_counts[:bin_count]) private(bin)
    /* Count number of values in each bin */
    for (i = 0; i < data_count; i++) {
       bin = Which_bin(data[i], bin_maxes, bin_count, min_meas);

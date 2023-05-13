@@ -22,7 +22,7 @@ int main(int argc, char **argv)
         {
             x = ((double)rand_r(&seed)) / RAND_MAX;
             y = ((double)rand_r(&seed)) / RAND_MAX;
-            if (sqrt(x * x + y * y) <= 1.0)
+            if ((x * x + y * y) <= 1.0)
                 local_h++;
         }
 #pragma omp atomic

@@ -12,7 +12,7 @@ int main() {
     }
 
     printf("\nSchedule dynamic:\n");
-    #pragma omp parallel for schedule(dynamic) num_threads(4)
+    #pragma omp parallel for schedule(dynamic,10) num_threads(4)
     for(i = 0; i < N; i++) {
         printf("Thread %d processou a iteração %d\n", omp_get_thread_num(), i);
     }

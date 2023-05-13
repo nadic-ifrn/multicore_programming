@@ -218,8 +218,6 @@ int main(int argc, char** argv) {
         cerr << "Usage: " << argv[0] << " <path to DICOM folder> <number of slices> <output file path>" << endl;
         return EXIT_FAILURE;
     }
-
-
     // List DICOM files in folder
     vector<string> dicom_file_paths = list_dicom_files(argv[1],atoi(argv[2]));
 
