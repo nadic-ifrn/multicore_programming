@@ -6,19 +6,19 @@ O objetivo deste curso é capacitar profissionais para explorar as tecnologias p
 
 A primeira parte do curso visa apresentar a motivação e a importância de adquirir habilidades em programação paralela para melhorar o desempenho e a economia de energia das suas aplicações.
 
-Slides: [Introdução à Computação Paralela](notes/treinamento_1.pdf)
+Slides: [Introdução à Computação Paralela](notes/treinamento_I.pdf)
 
 # Paralelismo de Hardware e Software :gear:
 
 A segunda parte do curso aborda as arquiteturas paralelas atuais e os conceitos relacionados à programação paralela de maneira resumida.
 
-Slides: [Paralelismo de Hardware e Software](notes/treinamento_2.pdf)
+Slides: [Paralelismo de Hardware e Software](notes/treinamento_II.pdf)
 
 # Programação com OpenMP :computer:
 
 A terceira parte do curso apresenta, de maneira prática, o conjunto de diretivas do OpenMP utilizadas para facilitar a programação paralela em memória compartilhada.
 
-Slides: [Programação com OpenMP](notes/treinamento_3.pdf)
+Slides: [Programação com OpenMP](notes/treinamento_III.pdf)
 
 Códigos: [Códigos OpenMP](src/)
 
@@ -26,4 +26,4 @@ Códigos: [Códigos OpenMP](src/)
 
 A quarta e última parte do curso apresenta, de forma prática, os conceitos de programação em GPU da NVidia, CUDA.
 
-Notebook: [Programação CUDA](notes/treinamento_IV.ipynb)
+Notebook: [Programação CUDA](notes/Treinamento_IV.ipynb)
